@@ -108,3 +108,6 @@ Check each source page for its credit line before publishing. NASA does not endo
 ## License
 
 MIT for the project's own code. See `LICENSE`. three.js is under its own licence in `vendor/THREE-LICENSE.txt`.
+
+---
+*AI acknowledgment: We used Claude (Anthropic) and ChatGPT (OpenAI) to assist with coding, presentation preparation, and research. Our team is responsible for the final work.*
