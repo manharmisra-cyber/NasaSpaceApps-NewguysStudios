@@ -12,11 +12,11 @@ Live site (once GitHub Pages is switched on): https://manharmisra-cyber.github.i
 
 | Name | Role |
 |---|---|
-| Zhian | Backend |
-| Vansh | Backend and presentation support |
-| Manhar | Formulae and Scientific Validation |
+| Zhian | JavaScript |
+| Vansh | JavaScript and presentation support |
+| Manhar | Formulae, Scientific Validation, App Interface and Style |
 | Ashank | Presentation |
-| Siddant | Frontend and 3D models |
+| Siddhanth | Frontend and 3D models |
 
 ## The three pages
 
