@@ -1,0 +1,204 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Lunar Navigator</title>
+<meta name="description" content="Compare lunar landing sites and dates: Sun and Earth against the horizon, power and direct-to-Earth comms windows, in 3D.">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Sans+Condensed:wght@500;600&family=IBM+Plex+Sans:wght@400;500;600&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="css/style.css"><link rel="stylesheet" href="css/integration.css"><script src="shared-state.js"></script><script src="lunar-sites.js"></script>
+<link rel="stylesheet" href="css/merge.css"></head>
+<body>
+<div class="app">
+  <header class="topbar">
+    <div class="wordmark"><i aria-hidden="true"></i><h1>Lunar Navigator</h1></div>
+    <div class="seg modes" id="heroSeg" role="group" aria-label="Which 3D view"><button data-v="surface" aria-pressed="true">Surface</button><button data-v="space" aria-pressed="false">Earth, Moon and Sun</button></div>
+    <nav class="pages" aria-label="Pages"><a href="index.html" aria-current="page">Surface and space</a><a href="mission.html" data-mission-link>Mission designer</a><a href="sky.html">Reference sky</a></nav>
+  </header>
+
+  <nav class="sidebar" aria-label="Landing sites">
+    <h2>Landing sites</h2>
+    <div id="sites"></div>
+    <form class="custom" id="customForm">
+      <h3>Somewhere else</h3>
+      <div class="pair">
+        <label for="clat">Latitude &deg;N <input type="number" id="clat" step="any" min="-90" max="90"></label>
+        <label for="clon">Longitude &deg;E <input type="number" id="clon" step="any" min="-180" max="360"></label>
+      </div>
+      <button class="btn" type="submit">Go to these coordinates</button>
+      <div id="cerr" role="alert"></div>
+    </form>
+  </nav>
+
+  <main class="viewport" aria-label="3D view">
+    <div class="view" id="surfView">
+      <canvas id="scene" tabindex="0" role="img" aria-label="3D view of the landing site: terrain lit by the Sun at its computed position, Earth in the sky, a lander and a rover. Arrow keys drive the rover, U changes its speed, L toggles its lamps, plus and minus zoom."></canvas>
+      <div id="noGl" hidden>This browser cannot show the 3D view (WebGL is off). Everything else still works.</div>
+      <span class="lab3 sun" id="l3Sun" hidden>Sun</span><span class="lab3 earth" id="l3Earth" hidden>Earth</span><span class="lab3 n" id="l3N" hidden>N</span><span class="lab3 ld" id="l3Lander" hidden>Lander</span><span class="lab3 rv" id="l3Rover" hidden>Rover</span>
+    </div>
+    <div class="view" id="spaceView" hidden>
+      <canvas id="space" tabindex="0" role="img" aria-label="3D view of Earth, the Moon and the Sun from space at true scale. Plus and minus zoom."></canvas>
+      <div id="cockpit" hidden aria-hidden="true"><i></i></div>
+      <span class="lab3 sun" id="sSun" hidden>Sun</span><span class="lab3 earth" id="sEarth" hidden>Earth</span><span class="lab3 n" id="sMoon" hidden>Moon</span><span class="lab3 ld" id="sSite" hidden>Landing site</span><span class="lab3 rv" id="sCraft" hidden>Spacecraft</span>
+    </div>
+    <div class="heroinfo">
+      <b id="siteName"></b>
+      <span id="siteCoord"></span>
+      <div class="hud"><span class="pill" id="hudSun"></span><span class="pill" id="hudEarth"></span></div>
+    </div>
+    <div class="stagebar">
+      <span id="terrBadge"></span>
+      <div class="seg" id="camSeg" role="group" aria-label="Camera">
+        <button data-v="orbit" aria-pressed="true">Orbit lander</button><button data-v="rover" aria-pressed="false">Follow rover</button><button data-v="ride" aria-pressed="false">Ride rover</button><button data-v="lander" aria-pressed="false">Stand at lander</button><button data-v="sun">Face Sun</button><button data-v="earth">Face Earth</button><button data-v="in" aria-label="Zoom in">+</button><button data-v="out" aria-label="Zoom out">&minus;</button>
+      </div>
+      <div class="seg" id="spSeg" role="group" aria-label="Space camera" hidden>
+        <button data-v="system" aria-pressed="true">Whole system</button><button data-v="earth" aria-pressed="false">Earth</button><button data-v="moon" aria-pressed="false">Moon</button><button data-v="fromEarth" aria-pressed="false">From Earth</button><button data-v="fromMoon" aria-pressed="false">From the Moon</button><button data-v="fromSun" aria-pressed="false">From the Sun</button><button data-v="flight" aria-pressed="false">Spacecraft</button><button data-v="in" aria-label="Zoom in">+</button><button data-v="out" aria-label="Zoom out">&minus;</button>
+      </div>
+    </div>
+  </main>
+
+  <section class="dock" aria-label="Time">
+    <div class="transport" id="steps">
+      <label for="dt">Date and time, UTC</label>
+      <input type="datetime-local" id="dt">
+      <div class="stepgrid">
+        <button data-d="-29.530589" title="Back one lunar day (29.5 days)">&minus;1 lunar day</button><button data-d="-1">&minus;1 day</button><button data-d="-0.0416667">&minus;1 hour</button>
+        <button data-d="29.530589" title="Forward one lunar day (29.5 days)">+1 lunar day</button><button data-d="1">+1 day</button><button data-d="0.0416667">+1 hour</button>
+      </div>
+      <div class="playrow">
+        <button id="play" class="primary">&#9654; Play</button><button id="now">Now</button>
+      </div>
+      <div class="speed" role="group" aria-label="Playback speed"><button id="slower">Slower</button><output id="speedOut" aria-live="polite"></output><button id="faster">Faster</button></div>
+    </div>
+    <div class="dockmain" data-tabs="dock">
+      <div class="tabrow">
+        <div class="tabs" role="tablist"><button role="tab" data-tab="timeline" aria-selected="true">Timeline</button><button role="tab" data-tab="horizon" aria-selected="false">Horizon</button><button role="tab" data-tab="compare" aria-selected="false">Compare</button><button role="tab" data-tab="best" aria-selected="false">When to land</button></div>
+        <div class="tabtools" data-for="timeline">
+          <div class="legend"><span><i class="sw sun"></i>Sun</span><span><i class="sw earth"></i>Earth</span><span><i class="sw win"></i>Mission window</span></div>
+          <div class="seg" id="spanSeg" role="group" aria-label="Timeline length"><button data-v="30" aria-pressed="true">30 days</button><button data-v="90" aria-pressed="false">90 days</button><button data-v="365" aria-pressed="false">1 year</button></div>
+          <div class="seg" id="winSeg" role="group" aria-label="Mission length"><button data-v="7" aria-pressed="false">7-day mission</button><button data-v="14" aria-pressed="true">14</button><button data-v="30" aria-pressed="false">30</button></div>
+        </div>
+      </div>
+      <div class="tabpanel" data-panel="timeline">
+        <div class="tlwrap"><canvas id="tl" data-h="196" role="img" aria-label="Line chart of how far the Sun and Earth are above the local horizon over time, with bars for sunlit and Earth-link periods. Click or drag to change the time."></canvas><div id="tip" hidden></div></div>
+      </div>
+      <div class="tabpanel" data-panel="horizon" hidden>
+        <canvas id="sky" data-h="176" role="img" aria-label="Panorama of the horizon showing the Sun and Earth positions by compass direction and elevation"></canvas>
+        <p class="note" id="skyNote"></p>
+      </div>
+      <div class="tabpanel" data-panel="compare" hidden>
+        <div class="btns">
+          <button class="primary" id="addOne">Add current site and date</button><button id="addPole">Add all south pole targets</button><button id="addDays">Add this site for the next 6 lunar days</button><button id="copyCsv">Copy as CSV</button><button id="downloadCsv">Download CSV</button><button id="clear">Clear</button>
+        </div>
+        <div class="tablewrap">
+          <table>
+            <thead><tr><th>Site</th><th>Start</th><th class="num">Sun</th><th class="num">Earth</th><th class="num">Sunlit</th><th class="num">Earth visibility</th><th class="num">Both</th><th><span class="legend"><span><i class="sw sun"></i>sunlit</span><span><i class="sw earth"></i>Earth in view</span></span></th><th></th></tr></thead>
+            <tbody id="cmpBody"></tbody>
+          </table>
+        </div>
+      </div>
+      <div class="tabpanel" data-panel="best" hidden>
+        <p class="note" id="bestHead"></p>
+        <p class="note" id="landingMethod">Environmental date probes; connecting spacecraft checks…</p><ol id="best"></ol>
+      </div>
+    </div>
+  </section>
+
+  <aside class="inspector" aria-label="Details"><div class="integration-context"><a id="planMission" data-mission-link href="mission.html">Plan a mission here ↗</a><div id="dataNotice" role="status"></div></div>
+    <section class="ctx" id="roverCard" aria-label="Rover">
+      <h2>Rover</h2>
+      <div class="where" id="rvWhere"></div>
+      <div class="chips" id="rvChips" aria-live="polite"></div>
+      <div class="drive">
+        <div class="dpad" id="dpad" role="group" aria-label="Drive the rover">
+          <button data-m="f" aria-label="Drive forward">&#9650;</button><button data-m="l" aria-label="Drive left">&#9664;</button><button data-m="b" aria-label="Drive back">&#9660;</button><button data-m="r" aria-label="Drive right">&#9654;</button>
+        </div>
+        <div class="rvbtns"><button id="rvSpeed" data-v="1" aria-pressed="false">Speed: normal</button><button id="ledBtn" aria-pressed="false">LED lamps: off</button><button class="linkbtn" id="rvReset">Return to lander</button></div>
+      </div>
+      <p class="hint">Click the 3D view first. Arrow keys drive, U changes speed, L switches the lamps, the mouse wheel zooms.</p>
+      <div class="rnote" id="rvNote" role="status"></div>
+    </section>
+    <section class="ctx" id="flightCard" aria-label="Flight to the Moon" hidden>
+      <h2>Fly from Earth to the Moon</h2>
+      <p class="where" id="spDesc"></p>
+      <div class="rvbtns row"><button class="primary" id="launch">Launch from Earth now</button><button class="linkbtn" id="flClear" hidden>Remove the flight</button></div>
+      <div class="seg" id="lookSeg" role="group" aria-label="Look direction" hidden><button data-v="ahead" aria-pressed="true">Look ahead</button><button data-v="back" aria-pressed="false">Look back at Earth</button></div>
+      <div id="flHud" aria-live="off"></div>
+      <p class="hint">About five days on a simple transfer ellipse. Use Slower and Faster to change the pace.</p>
+    </section>
+    <div class="insptabs" data-tabs="insp">
+      <div class="tabs" role="tablist"><button role="tab" data-tab="now" aria-selected="true">Now</button><button role="tab" data-tab="mission" aria-selected="false">Mission</button><button role="tab" data-tab="moon" aria-selected="false">Map</button><button role="tab" data-tab="setup" aria-selected="false">Terrain</button><button role="tab" data-tab="about" aria-selected="false">Method</button></div>
+      <div class="tabpanel" data-panel="now">
+        <p id="verdict" aria-live="polite"></p>
+        <div class="tiles"><div class="tile" id="tSun"></div><div class="tile" id="tEarth"></div><div class="tile" id="tPower"></div><div class="tile" id="tTemp"></div><div class="tile" id="tWin"></div></div>
+        <h3>Why small changes matter here</h3>
+        <ul id="sens"></ul>
+      </div>
+      <div class="tabpanel" data-panel="mission" hidden>
+        <p id="msVerdict" aria-live="polite"></p>
+        <div class="chips" id="msChips"></div>
+        <h3>Your lander</h3>
+        <div class="grid2" id="msForm">
+          <label for="mPanel">Solar panel output in full Sun, W <input type="number" id="mPanel" min="0" step="10" value="400"></label>
+          <label for="mBatt">Battery capacity, Wh <input type="number" id="mBatt" min="0" step="100" value="2000"></label>
+          <label for="mAwake">Power used while working, W <input type="number" id="mAwake" min="0" step="10" value="200"></label>
+          <label for="mSurv">Power used in the dark, W <input type="number" id="mSurv" min="0" step="5" value="40"></label>
+          <label for="mData">Data to send home, GB <input type="number" id="mData" min="0" step="0.5" value="5"></label>
+          <label for="mRate">Downlink rate, Mbps <input type="number" id="mRate" min="0" step="0.1" value="2"></label>
+        </div>
+        <h3 id="msChartTitle">Battery charge over the mission</h3>
+        <canvas id="msChart" data-h="120" role="img" aria-label="Battery charge in percent over the mission, with dark periods shaded"></canvas>
+        <dl class="kv" id="msRows"></dl>
+        <p class="note">The mission starts at the selected time with a full battery and runs for the mission length chosen in the Timeline tab. The lander works while it is sunlit and drops to its dark-time power draw otherwise. Data is counted whenever Earth is in view, which assumes a ground station is always listening. The starting values are examples, not a real spacecraft. Hourly midpoint sampling, lossless battery, no charge/discharge limits or degradation; no radio link budget or station scheduling. These estimates do not certify mission feasibility.</p>
+      </div>
+      <div class="tabpanel" data-panel="moon" hidden>
+        <h2>Candidate arrival areas</h2><p id="candidateSummary" class="note" role="status">Loading mission scenario…</p><div class="candidate-tools"><label>Arrival interval<select id="candidateHours"><option value="1">Next hour</option><option value="24" selected>Next 24 hours</option><option value="168">Next 7 days</option></select></label><label><input id="candidateOnly" type="checkbox"> Within pin radius only</label><button id="nearestCandidate">Use nearest arrival</button></div><div class="seg" id="viewSeg" role="group" aria-label="Map view"><button data-v="globe" aria-pressed="true">Globe</button><button data-v="pole" aria-pressed="false">South pole</button><button data-v="flat" aria-pressed="false">Flat map</button></div>
+        <div class="plate" id="globeWrap">
+          <canvas id="globe" role="img" aria-label="3D globe of the Moon showing day and night, the limit of Earth visibility and landing sites"></canvas>
+          <span class="lab3 sun" id="gSun" hidden>to Sun</span><span class="lab3 earth" id="gEarth" hidden>to Earth</span><span class="lab3 ld" id="gSite" hidden></span>
+        </div>
+        <canvas id="map" hidden role="img" aria-label="Map of the Moon showing day and night, the limit of Earth visibility, and landing sites"></canvas>
+        <p class="note" id="mapNote"></p><div class="map-legend"><span class="good">● Candidate</span><span class="warn">● Conditional Earth route</span><span class="bad">● Failed fuel/thrust</span><span>◯ Pin radius</span></div><p class="note">Tracks use the Mission designer’s spacecraft and orbit. Highlighted samples are preliminary arrivals, not terrain-safe landing zones. South pole view covers 60–90° S; use Flat map for other tracks.</p>
+      </div>
+      <div class="tabpanel" data-panel="setup" hidden>
+        <div class="field"><label for="terrainSel">Terrain around the site</label>
+          <select id="terrainSel"><option value="terrain">3D terrain with shadows</option><option value="sphere">Smooth sphere, no terrain</option><option value="demo">Generated demo · not measured terrain</option></select></div>
+        <p class="note" id="demStatus"></p><button id="retryData">Retry elevation data</button>
+        <div class="field"><label for="demFile">Load your own higher-resolution tile for this site (.asc)</label><input type="file" id="demFile" accept=".asc,.txt,text/plain"></div>
+        <div class="field"><label for="demProj">Tile orientation</label>
+          <select id="demProj"><option value="spole">South polar stereographic</option><option value="npole">North polar stereographic</option><option value="north">North is up</option></select></div>
+        <p class="note">Metres; selected pin at grid centre. Complete data only; maximum 4 million cells. Orientation rotates this local tile without reprojection.</p><div id="demErr" role="alert"></div>
+        <div class="field"><div class="row"><label for="mask">Extra margin on the horizon</label><output id="maskOut">0.0&deg;</output></div><input type="range" id="mask" min="0" max="8" step="0.1" value="0"></div>
+        <div class="field" id="heightField"><div class="row"><label for="height">Height above surroundings (sphere only)</label><output id="heightOut">0 m</output></div><input type="range" id="height" min="0" max="3000" step="50" value="0"></div>
+        <div class="field"><div class="row"><label for="margin">Antenna margin above horizon</label><output id="marginOut">0.0&deg;</output></div><input type="range" id="margin" min="0" max="10" step="0.5" value="0"></div>
+        <div class="field"><label for="panel">Solar panel</label><select id="panel"><option value="track">Sun-pointing panel · ideal tracking</option><option value="flat">Flat on the deck</option></select></div>
+      </div>
+      <div class="tabpanel" data-panel="about" hidden>
+        <ul>
+        <li><b>The terrain is real.</b> The imported dataset identifies its preset heights as NASA's LOLA laser altimeter (the 64 pixel-per-degree global grid, resampled to 500 m cells, 64 km across), plus a far-horizon profile from real terrain out to 400 km. Custom sites use the 16 pixel-per-degree grid (about 1.9 km cells, 243 km across). Features smaller than one cell are not in the data, so a real rim or boulder field closer than that can still block the Sun earlier than shown.</li>
+        <li>If elevation files fail to load, terrain-dependent results are withheld and a retry is offered. Smooth sphere and generated demo terrain are explicit alternatives. The demo is not a measured lunar location.</li>
+        <li>For every compass direction the tool walks outward across the height grid and records the highest angle the ground reaches, corrected for the Moon's curvature. The Sun or Earth counts as visible when it clears that profile. The large shadows in the 3D view come from the same test. Small craters, rocks and surface texture in the 3D view are decoration and are not part of the calculation.</li>
+        <li><b>Approximate positions.</b> This view uses a truncated lunar theory and optical libration formulas from Meeus, <i>Astronomical Algorithms</i>. The separate <a href="sky.html">JPL reference sky</a> retains cached Horizons data for three fixed sites in November 2026. An arbitrary pin here is not a live Horizons query. See the packaged validation report for the bounded comparison.</li>
+        <li>The Moon's surface colour is NASA's LROC map and Earth is NASA's Blue Marble, both at 2048 x 1024, so they blur when you zoom far in. Earth is shown without clouds. Sizes, distances, phases, Earth's rotation and the tilt of both bodies are computed for the selected time.</li>
+        <li>The lander and rover are drawn at roughly real size, so zoom in to see them. The rover reports sunlight, Earth visibility and line of sight to the lander at its own position. Its lamps light the ground in the picture only, and its fast and ultra speeds are for getting around, not a claim about real rovers.</li>
+        <li>The flight follows a two-body transfer ellipse from a 200 km Earth orbit to 500 km above the Moon. It ignores the Moon's gravity and any engine burns after departure, so it shows the shape, speed and timing of the trip, not a flyable trajectory.</li>
+        <li>There is no atmosphere, so no refraction and no twilight. Ground temperature is a radiative-equilibrium estimate for flat sunlit regolith, with a fixed 95 K for unlit ground.</li>
+        <li>Site coordinates marked approx. are representative points. You can still load your own higher-resolution elevation tile (.asc) for a site in the Terrain and hardware panel.</li>
+      </ul><p class="note">NASA does not endorse any non-U.S. Government entity and is not responsible for information contained on non-U.S. Government websites. For non-U.S. Government websites, participants must comply with any data use parameters of that specific website. <a href="sky.html#resources">NASA & CSA resources</a></p>
+      </div>
+    </div>
+  </aside>
+</div>
+<script src="data/far_horizon.js"></script>
+<script src="js/realdata.js"></script>
+<script src="js/ephem.js"></script>
+<script src="js/terrain.js"></script>
+<script src="js/glx.js"></script>
+<script src="js/globe.js"></script>
+<script src="js/planet.js"></script>
+<script src="js/surface-placement.js"></script><script src="js/scene3d.js"></script>
+<script src="js/space.js"></script>
+<script src="js/surface-workspace.js"></script><script src="js/app.js"></script><script type="module" src="js/mission-link.mjs"></script>
+</body>
+</html>

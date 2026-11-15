@@ -1,0 +1,13 @@
+{
+  "name": "nasaspaceapps-newguysstudios",
+  "version": "1.0.0",
+  "description": "Lunar Navigator: compare lunar landing sites and dates, explore the surface in 3D, and screen a mission's orbit and fuel budget.",
+  "private": true,
+  "license": "MIT",
+  "author": "Newguys Studios",
+  "repository": "github:manharmisra-cyber/NasaSpaceApps-NewguysStudios",
+  "scripts": {
+    "test": "node tests/run.js && node --test tests/*.mjs",
+    "start": "node server.mjs"
+  }
+}

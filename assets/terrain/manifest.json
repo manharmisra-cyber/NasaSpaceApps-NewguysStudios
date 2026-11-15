@@ -1,0 +1,41 @@
+{
+  "version": 1,
+  "width": 5760,
+  "height": 2880,
+  "tileSize": 256,
+  "sampleType": "uint16-le",
+  "heightScaleMetres": 0.5,
+  "heightOffsetMetres": -10000,
+  "referenceRadiusMetres": 1737400,
+  "pixelsPerDegree": 16,
+  "pixelRegistration": "cell-centred; west=-180, north=90; rows north-to-south; longitude wraps",
+  "minimumMetres": -8981.5,
+  "maximumMetres": 10685.5,
+  "model": {
+    "vertices": 294382,
+    "triangles": 583646,
+    "vertexStride": 5,
+    "simplificationRelativeError": 0.0000795794403529726,
+    "overviewGrid": {
+      "longitudeSegments": 1024,
+      "latitudeSegments": 512
+    },
+    "description": "NASA 14959 GLB colour map and its source LOLA DEM remeshed to repair documented polar artifacts. Physical elevations replace presentation exaggeration. 1024x512 overview grid simplified; polar cap uses mean of adjacent DEM row. Regional view uses full 16px/degree DEM independently."
+  },
+  "sources": {
+    "model": "https://svs.gsfc.nasa.gov/14959/",
+    "modelFile": "https://svs.gsfc.nasa.gov/vis/a010000/a014900/a014959/Moon_NASA_LRO_8k_Topo_Small.glb",
+    "height": "https://svs.gsfc.nasa.gov/vis/a000000/a004700/a004720/ldem_16_uint.tif",
+    "heightDocumentation": "https://svs.gsfc.nasa.gov/4720/",
+    "credit": "NASA Goddard Space Flight Center; NASA Scientific Visualization Studio; LRO / LOLA / LROC"
+  },
+  "sourceHashes": {
+    "model": "c4b65fb4df622a37fd75366c2ed9bf9e163e41c0fde178b3b27e31b0173e6953",
+    "height": "45a2b32d56e81ed30db07fead8abc842b249b6511219d9ca2c53f81bc2dc5d62"
+  },
+  "assetHashes": {
+    "vertices": "c4c0792f4bb5946f3eadec3ed06fe9cb613a15d3b1ad88b5a0c47a0a196c6ce6",
+    "indices": "fee9334c1aa7df1e9b4009a8eb63648fb63044f10a96a82c07f69e0e15ece80e",
+    "color": "cc32b024491668b8a2d4e1a6c911ce9a130e9eb8e6704f65027697877f6aa77f"
+  }
+}

@@ -1,0 +1,8 @@
+import test from 'node:test';import assert from 'node:assert/strict';import {ArrivalClock} from '../mission-time.mjs';import {candidateAt,transfer} from '../mission-core.mjs';
+test('full interval and moving time window are distinct',()=>{const c=new ArrivalClock();c.range(1000,10000);assert.deepEqual(c.interval(),{from:1000,to:10000});c.mode='slice';c.seek(5000);assert.deepEqual(c.interval(),{from:4700,to:5300});});
+test('time windows clip at both interval boundaries',()=>{const c=new ArrivalClock();c.range(1000,2000);c.mode='slice';assert.deepEqual(c.interval(),{from:1000,to:1300});c.seek(5000);assert.equal(c.current,2000);assert.deepEqual(c.interval(),{from:1700,to:2000});});
+test('playback stops at end rather than silently looping',()=>{const c=new ArrivalClock();c.range(1000,2000);assert.equal(c.advance(500),true);assert.equal(c.advance(1000),false);assert.equal(c.current,2000);});
+test('changing the interval clamps the current cursor',()=>{const c=new ArrivalClock();c.range(1000,10000);c.seek(8000);c.range(2000,4000);assert.equal(c.current,4000);assert.equal(c.range(NaN,4000),false);});
+test('advancing arrival time changes predicted landing location',()=>{const p={goal:'land',ap:100,pe:100,inc:90,node:0,arg:0,phase:0,epoch:1000,lat:-89,lon:0};const t=transfer(p),a=candidateAt(5000,p,t),b=candidateAt(6800,p,t);assert.ok(Math.hypot(...a.body.map((v,i)=>v-b.body[i]))>.5);});
+
+test('continuous playback extends past its end without rewinding',()=>{const c=new ArrivalClock();c.range(0,86400);c.seek(86300);c.continuous=true;assert.equal(c.advance(300),true);assert.equal(c.current,86600);assert.ok(c.to>c.current);for(let i=0;i<400;i++)c.advance(86400);assert.ok(c.current>365*86400);});

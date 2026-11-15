@@ -1,0 +1,23 @@
+/* Brings the mission designer and reference sky pages into the same look as the surface explorer:
+   neutral greys, IBM Plex Sans, the same top bar and controls. Loaded after each page's own stylesheets. */
+:root { color-scheme: dark; --bg: #18181a; --panel: #202022; --panel-2: #2a2a2d; --line: #37373a; --muted: #a9a8a2; --text: #ecebe7; --lime: #ecebe7; --blue: #7fb0f0;
+  --ink: #ecebe7; --ink-2: #b7b6b0; --ink-3: #8a8983; --ui: "IBM Plex Sans", system-ui, -apple-system, "Segoe UI", sans-serif; --num: "IBM Plex Sans Condensed", "IBM Plex Sans", system-ui, sans-serif; }
+body { background: var(--bg); color: var(--text); font: 13px/1.45 var(--ui); font-variant-numeric: tabular-nums; -webkit-font-smoothing: antialiased; }
+header.topbar { height: 44px; padding: 0 14px; gap: 18px; justify-content: flex-start; background: var(--panel); border-bottom: 1px solid var(--line); position: sticky; top: 0; z-index: 30; }
+.topbar .wordmark { display: flex; align-items: center; gap: 9px; font: 600 14px var(--ui); letter-spacing: 0; color: var(--ink); text-decoration: none; flex: none; }
+.topbar .wordmark i { width: 18px; height: 18px; border-radius: 50%; background: #d6d5cf; box-shadow: inset -6px -2px 0 #55554f; }
+.pages { display: flex; gap: 2px; margin-left: auto; align-self: stretch; font-size: 13px; }
+.pages a { display: flex; align-items: center; padding: 0 11px; color: var(--ink-3); text-decoration: none; border-bottom: 2px solid transparent; white-space: nowrap; }
+.pages a:hover { color: var(--ink); text-decoration: none; }
+.pages a[aria-current] { color: var(--ink); border-bottom-color: var(--ink); font-weight: 500; }
+main { padding: 20px 20px 44px; }
+h1, h2, h3 { letter-spacing: 0; }
+.intro { margin-bottom: 16px; } .intro h1 { font: 600 26px/1.15 var(--num); letter-spacing: 0; margin: 2px 0 4px; } .intro p:not(.eyebrow) { font-size: 13.5px; }
+.eyebrow, .header-note, .live { letter-spacing: 0; text-transform: none; font-size: 12px; font-weight: 500; color: var(--ink-3); }
+.live { border-radius: 4px; padding: 4px 9px; }
+.panel { border-radius: 6px; }
+button, select, input { border-radius: 4px; border-color: var(--line); }
+:focus-visible { outline-color: #9db9e8 !important; }
+@media (max-width: 700px) { header.topbar { height: auto; flex-wrap: wrap; padding: 8px 12px; } .pages { margin-left: 0; } .pages a { height: 34px; } }
+main [class], main small, main th, main summary, main label { text-transform: none !important; letter-spacing: 0 !important; }
+main .intro h1 { font: 600 26px/1.15 var(--num) !important; }

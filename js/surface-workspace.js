@@ -1,0 +1,21 @@
+/* Customize the existing surface desktop. Live canvases are never cloned. */
+(function(){
+ if(new URLSearchParams(location.search).get('embed')==='surface')return;
+ const app=document.querySelector('.app'),names={sites:'Landing sites',scene:'Surface & space',time:'Time & comparisons',details:'Map & mission details'},nodes={sites:document.querySelector('.sidebar'),scene:document.querySelector('.viewport'),time:document.querySelector('.dock'),details:document.querySelector('.inspector')},positions=['center','left','right','top','bottom','hidden'],key='lunar-surface-layout-v1',defaults={sites:'left',scene:'center',time:'bottom',details:'right'};
+ let layout={...defaults},focused=false;try{const saved=JSON.parse(localStorage.getItem(key));if(saved)for(const id in names)if(positions.includes(saved[id]))layout[id]=saved[id];}catch{}
+ function valid(){const centers=Object.keys(names).filter(id=>layout[id]==='center');if(centers.length!==1){for(const id of centers)layout[id]='right';const next=Object.keys(names).find(id=>layout[id]!=='hidden')||'scene';layout[next]='center';}}valid();
+ const toolbar=document.createElement('div');toolbar.className='surface-workbar';toolbar.innerHTML='<span class="workspace-label">Layout</span><button id="surfaceArrange" aria-expanded="false">Arrange panels</button><button id="surfaceFocus" aria-pressed="false">Focus center</button><button id="surfaceMapFocus">Candidate map</button><button id="surfaceLayoutReset">Reset layout</button><span class="workspace-saved" role="status">Layout saved on this device</span>';
+ app.before(toolbar);const picker=document.createElement('div');picker.className='surface-picker';picker.hidden=true;toolbar.after(picker);
+ for(const id in names){const label=document.createElement('label');label.textContent=names[id];const sel=document.createElement('select');sel.id='dock-'+id;sel.setAttribute('aria-label',names[id]+' position');for(const pos of positions){const opt=document.createElement('option');opt.value=pos;opt.textContent=pos[0].toUpperCase()+pos.slice(1);sel.append(opt);}sel.onchange=()=>{const previous=layout[id],target=sel.value;if(target==='center'){const old=Object.keys(names).find(k=>layout[k]==='center');if(old&&old!==id)layout[old]=previous==='hidden'?'right':previous;}layout[id]=target;valid();apply();};label.append(sel);picker.append(label);}
+ const zones={};for(const pos of positions.filter(p=>p!=='hidden')){const zone=document.createElement('div');zone.className='surface-zone zone-'+pos;zone.dataset.zone=pos;app.append(zone);zones[pos]=zone;}
+ // Each widget lives in one stable wrapper. Moving canvases preserves WebGL state.
+ function apply(){app.classList.add('surface-desktop');app.classList.toggle('surface-focused',focused);for(const id in names){const p=layout[id];nodes[id].hidden=p==='hidden';if(p!=='hidden'&&nodes[id].parentNode!==zones[p])zones[p].append(nodes[id]);document.getElementById('dock-'+id).value=p;}
+  for(const p in zones){const has=Object.keys(names).some(id=>layout[id]===p);zones[p].hidden=!has;app.classList.toggle('has-'+p,has);}try{localStorage.setItem(key,JSON.stringify(layout));}catch{toolbar.querySelector('.workspace-saved').textContent='Layout active; device storage unavailable';}window.dispatchEvent(new Event('resize'));
+ }
+ document.getElementById('surfaceArrange').onclick=()=>{picker.hidden=!picker.hidden;document.getElementById('surfaceArrange').setAttribute('aria-expanded',!picker.hidden);};
+ document.getElementById('surfaceFocus').onclick=()=>{focused=!focused;document.getElementById('surfaceFocus').setAttribute('aria-pressed',focused);apply();};
+ document.getElementById('surfaceMapFocus').onclick=()=>{const old=Object.keys(names).find(id=>layout[id]==='center');if(old!=='details'){layout[old]=layout.details==='hidden'?'right':layout.details;layout.details='center';}apply();document.querySelector('[data-tab="moon"]').click();};
+ document.getElementById('surfaceLayoutReset').onclick=()=>{layout={...defaults};focused=false;document.getElementById('surfaceFocus').setAttribute('aria-pressed','false');apply();};
+ document.addEventListener('keydown',e=>{if(e.key==='Escape'&&focused){focused=false;document.getElementById('surfaceFocus').setAttribute('aria-pressed','false');apply();}});
+ apply();
+})();

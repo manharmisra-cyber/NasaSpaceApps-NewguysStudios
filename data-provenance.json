@@ -1,0 +1,205 @@
+{
+  "source": "User-provided Lunar Navigator Real Moon (Copy)",
+  "importedAtUTC": "2026-11-14T11:16:00.287Z",
+  "files": [
+    {
+      "file": "data/earth_2k.jpg",
+      "bytes": 290160,
+      "sha256": "c66a1c828c719c352e46ce9ff4eec1e59e581343a38e1c49563bee81dcaab151"
+    },
+    {
+      "file": "data/far_horizon.js",
+      "bytes": 34222,
+      "sha256": "a7dd03e3241a88087daae99f4bf31e31c9da1dd5d052836e54a823de2649cad5"
+    },
+    {
+      "file": "data/ldem16_0_0.png",
+      "bytes": 1567227,
+      "sha256": "1e3fe102e4a8549dfb20509f42c73f7f7dd1bd93de394aa4a1797bca7f47faf6"
+    },
+    {
+      "file": "data/ldem16_0_1.png",
+      "bytes": 1443469,
+      "sha256": "4ee1cf63cf04f71d7f8053d2290fe06eddb01d18f5a00ae88a9ef171b821242c"
+    },
+    {
+      "file": "data/ldem16_0_2.png",
+      "bytes": 1484558,
+      "sha256": "d1936eab6ffef1e768ef50463a9d5e5cc396ba2ced221a93f998d334dc60c6d6"
+    },
+    {
+      "file": "data/ldem16_0_3.png",
+      "bytes": 1584999,
+      "sha256": "17293f8b8ccf0cef41e61683a8af99144c7c0f956e104f5fd9ab9502241b2c22"
+    },
+    {
+      "file": "data/ldem16_1_0.png",
+      "bytes": 1732963,
+      "sha256": "3f2b7636bb7f0ff31957ccbdb672572a64f8a1ce4e3bae1facdafa0b8ffc68c7"
+    },
+    {
+      "file": "data/ldem16_1_1.png",
+      "bytes": 1325261,
+      "sha256": "14f1b4f38dcd29876f56b646115935b714d88ff87805fd0c9948ec5813a6dae2"
+    },
+    {
+      "file": "data/ldem16_1_2.png",
+      "bytes": 1540514,
+      "sha256": "fc90135d7aeb7b3c66651c489add4c404314b4bfba008ac445c269a810b05cc5"
+    },
+    {
+      "file": "data/ldem16_1_3.png",
+      "bytes": 1722189,
+      "sha256": "75d881eaaef7f2f1c2c96ec495a298a28e211465f10b50f199ab290591a0f8a8"
+    },
+    {
+      "file": "data/ldem16_2_0.png",
+      "bytes": 1722920,
+      "sha256": "f6d6ceffe3ff0a07cd675859692ec7d8fd94c0dc741ef811f89d5ddc5e9c2fd9"
+    },
+    {
+      "file": "data/ldem16_2_1.png",
+      "bytes": 1564574,
+      "sha256": "52387e0c0fcd0750cc298011550f29683599ba22171f89c7a51259fc46a252f0"
+    },
+    {
+      "file": "data/ldem16_2_2.png",
+      "bytes": 1648343,
+      "sha256": "b37bf34674a1cba8b6dd3674b27b62aacb85bf27f559509507a356bd7a91730b"
+    },
+    {
+      "file": "data/ldem16_2_3.png",
+      "bytes": 1721065,
+      "sha256": "6514b19add738f046dae6e3f0738970ef9dbcb90f323dedaf54b33d7d4303dad"
+    },
+    {
+      "file": "data/ldem16_3_0.png",
+      "bytes": 1555737,
+      "sha256": "85d4a5fb66f4413838dedc1868794a7ebf47ddab2c31a17c49c22c7803830aa3"
+    },
+    {
+      "file": "data/ldem16_3_1.png",
+      "bytes": 1548681,
+      "sha256": "8a49bea45515cbd8c8c12d38fb6846d0a16ea7ceff51aea4d4d67cced667d163"
+    },
+    {
+      "file": "data/ldem16_3_2.png",
+      "bytes": 1558843,
+      "sha256": "a1bd5de5d998d2ae60bfab757f6157b4c3b4cc5c501b9be2356f650b38ec6e6e"
+    },
+    {
+      "file": "data/ldem16_3_3.png",
+      "bytes": 1532806,
+      "sha256": "27ca36eaea4a64913cd5ac96a21aea40ea091a7638081e62ca1f901a5a337846"
+    },
+    {
+      "file": "data/moon_2k.jpg",
+      "bytes": 472056,
+      "sha256": "86f68402f7a99f109e1e840e6824b2b52831e0c311d94e0cfad5fa8beaa1db7c"
+    },
+    {
+      "file": "data/sites.png",
+      "bytes": 355853,
+      "sha256": "ef53a3d98c40da9bf5a7abcf2f5ce3fc90a4c406f245acb60207a46997684343"
+    }
+  ],
+  "globalComparison": {
+    "samples": 16588800,
+    "mismatches": 0
+  },
+  "preset": {
+    "count": 17,
+    "width": 2176,
+    "height": 128,
+    "minMetres": -6520.5,
+    "maxMetres": 7002.5,
+    "fixtures": [
+      {
+        "index": 0,
+        "min": -2918.5,
+        "max": 1939.5
+      },
+      {
+        "index": 1,
+        "min": -2464,
+        "max": 5151
+      },
+      {
+        "index": 2,
+        "min": -1912.5,
+        "max": 6996
+      },
+      {
+        "index": 3,
+        "min": -971.5,
+        "max": 7002.5
+      },
+      {
+        "index": 4,
+        "min": -623.5,
+        "max": 3492
+      },
+      {
+        "index": 5,
+        "min": -541.5,
+        "max": 2320.5
+      },
+      {
+        "index": 6,
+        "min": -3757,
+        "max": -3335.5
+      },
+      {
+        "index": 7,
+        "min": -4680.5,
+        "max": 2766.5
+      },
+      {
+        "index": 8,
+        "min": -6520.5,
+        "max": -4312.5
+      },
+      {
+        "index": 9,
+        "min": -5660,
+        "max": -4389
+      },
+      {
+        "index": 10,
+        "min": -2646.5,
+        "max": -2063
+      },
+      {
+        "index": 11,
+        "min": -2371,
+        "max": -1286
+      },
+      {
+        "index": 12,
+        "min": -1751.5,
+        "max": -1260
+      },
+      {
+        "index": 13,
+        "min": -1547,
+        "max": -449.5
+      },
+      {
+        "index": 14,
+        "min": -2937,
+        "max": 2088
+      },
+      {
+        "index": 15,
+        "min": -303,
+        "max": 1095
+      },
+      {
+        "index": 16,
+        "min": -3024.5,
+        "max": -242.5
+      }
+    ],
+    "sourceClaim": "LOLA 64 ppd resampled to 500 m; supplied data, not independently re-fetched from upstream in this import."
+  }
+}
