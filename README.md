@@ -14,7 +14,7 @@ Live site (once GitHub Pages is switched on): https://manharmisra-cyber.github.i
 |---|---|
 | Zhian | Backend |
 | Vansh | Backend and presentation support |
-| Manhar | Calculations |
+| Manhar | Formulae and Scientific Validation |
 | Ashank | Presentation |
 | Siddant | Frontend and 3D models |
 
@@ -54,24 +54,6 @@ The pages share one site list and hand the selected place and time to each other
 
 ### Reference sky
 - Hourly JPL Horizons Sun and Earth positions for November 2026 at three polar viewpoints, with a panorama, a horizon chart, month comparison, horizon-profile CSV import and CSV export.
-
-## Run it
-
-The pages use browser modules and read data images, so they must be **served over http**; opening the files straight from disk will not work fully.
-
-```
-python3 -m http.server 8000
-```
-
-then visit http://localhost:8000. With Node.js installed you can instead run `node server.mjs` (or double-click `Start-Lunar-Navigator.cmd` on Windows) and open http://127.0.0.1:4186.
-
-### Put it on GitHub Pages
-
-1. Push these files to the `main` branch of https://github.com/manharmisra-cyber/NasaSpaceApps-NewguysStudios (keep `index.html` at the top level).
-2. In the repository, open Settings, then Pages.
-3. Under "Build and deployment", choose "Deploy from a branch", pick `main` and `/ (root)`, and save.
-
-The repository is about 80 MB, mostly NASA elevation data.
 
 ## Project layout
 
