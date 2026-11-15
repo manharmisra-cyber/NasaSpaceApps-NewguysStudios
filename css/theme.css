@@ -21,3 +21,38 @@ button, select, input { border-radius: 4px; border-color: var(--line); }
 @media (max-width: 700px) { header.topbar { height: auto; flex-wrap: wrap; padding: 8px 12px; } .pages { margin-left: 0; } .pages a { height: 34px; } }
 main [class], main small, main th, main summary, main label { text-transform: none !important; letter-spacing: 0 !important; }
 main .intro h1 { font: 600 26px/1.15 var(--num) !important; }
+
+/* step-by-step maneuver guidance */
+.maneuver{border-top:1px solid var(--line);padding:4px 0}
+.maneuver summary{display:flex;align-items:center;gap:10px;padding:10px 0;cursor:pointer;list-style:none;font-size:13px}
+.maneuver summary::-webkit-details-marker{display:none}
+.maneuver summary b{margin-left:auto;font-weight:500;white-space:nowrap}
+.maneuver .mnum{flex:none;width:20px;height:20px;border-radius:50%;border:1px solid var(--line);display:grid;place-items:center;font-size:11px;color:var(--muted)}
+.maneuver .mname small{color:var(--muted);font-weight:400}
+.mfacts{display:grid;grid-template-columns:minmax(90px,auto) 1fr;gap:4px 12px;margin:0 0 10px;font-size:12px}
+.mfacts dt{color:var(--muted)}.mfacts dd{margin:0;color:var(--text)}
+.msteps{margin:0 0 10px;padding-left:18px;font-size:12px;line-height:1.6;color:var(--text)}
+.mcheck,.mwarn{font-size:12px;line-height:1.5;margin:4px 0;color:var(--muted)}
+.mcheck b{font-weight:500;color:var(--text)}.mcheck.good b{color:#6cc48a}.mcheck.warn b{color:#d9a94e}.mcheck.bad b{color:#ff9f8d}
+.mwarn{color:#d9a94e}
+.maneuver-notes{border-top:1px solid var(--line);padding-top:8px;font-size:12px;color:var(--muted)}
+.maneuver-notes summary{cursor:pointer;padding:6px 0}.maneuver-notes ul{padding-left:18px;line-height:1.6}
+
+/* mission check items: status per check, never a bare value */
+.mc-summary{font-size:12px;color:var(--muted);margin:14px 0 6px}
+.mc-item{border-top:1px solid var(--line);padding:9px 0}
+.mc-head{display:flex;justify-content:space-between;gap:10px;font-size:13px;color:var(--text)}
+.mc-head b{font-weight:500;white-space:nowrap}
+.mc-item p{margin:3px 0 0;font-size:12px;line-height:1.5;color:var(--muted)}
+.mc-item .mc-meta{color:var(--text)}
+.mc-item .mc-fix{color:#e8d7a2}
+.mc-pass .mc-head b{color:#6cc48a}
+.mc-warning .mc-head b{color:#d9a94e}
+.mc-fail .mc-head b{color:#ff9f8d}
+.mc-unavailable .mc-head b,.mc-not-applicable .mc-head b{color:var(--muted);font-weight:400}
+
+/* burn status */
+.burn .burn-status{font-size:11px;font-weight:400;color:var(--muted);margin-left:6px}
+.burn-infeasible .burn-status,.burn-not-reached .burn-status{color:#ff9f8d}
+.burn-not-reached{opacity:.7}
+.burn-type{letter-spacing:0 !important;text-transform:none !important}

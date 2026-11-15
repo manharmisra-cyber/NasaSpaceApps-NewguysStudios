@@ -16,7 +16,7 @@
     return base+'?'+q;
   }
   function save(form) { try { const data={}; for(const el of form.elements) if(el.name)data[el.name]=el.value; root.sessionStorage.setItem(KEY,JSON.stringify(data)); } catch {} }
-  function restore(form) { try { const data=JSON.parse(root.sessionStorage.getItem(KEY)||'null'); if(!data||typeof data!=='object')return; for(const el of form.elements)if(el.name&&typeof data[el.name]==='string')el.value=data[el.name]; } catch {} }
+  function restore(form) { try { const data=JSON.parse(root.sessionStorage.getItem(KEY)||'null'); if(!data||typeof data!=='object')return; for(const el of form.elements)if(el.name&&typeof data[el.name]==='string'){el.value=data[el.name];if(el.tagName==='SELECT'&&el.selectedIndex<0){const d=[...el.options].findIndex(o=>o.defaultSelected);el.selectedIndex=d<0?0:d;}} } catch {} }
   function apply(form,value) {
     if(!value)return;
     const set=(name,v)=>{const el=form.elements.namedItem(name);if(el)el.value=v;};

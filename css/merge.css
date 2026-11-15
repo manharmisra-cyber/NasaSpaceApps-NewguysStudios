@@ -19,7 +19,7 @@ body { display: flex; flex-direction: column; height: 100dvh; }
 .surface-picker { flex: none; padding: 8px 14px 10px; display: flex; flex-wrap: wrap; gap: 12px; background: var(--panel); border-bottom: 1px solid var(--line); }
 .surface-picker label { min-width: 160px; display: flex; flex-direction: column; gap: 3px; }
 .app.surface-desktop { --left: 0px; --right: 0px; --top: 0px; --bottom: 0px; gap: 0; padding: 0; grid-template-columns: var(--left) minmax(340px, 1fr) var(--right); grid-template-rows: 44px var(--top) minmax(260px, 1fr) var(--bottom); grid-template-areas: "topbar topbar topbar" "left top right" "left center right" "bottom bottom right"; }
-.surface-desktop.has-left { --left: 250px; } .surface-desktop.has-right { --right: 356px; } .surface-desktop.has-top { --top: 240px; } .surface-desktop.has-bottom { --bottom: 294px; }
+/* --left and --right are set in the layout proportions section below */ .surface-desktop.has-top { --top: 240px; } .surface-desktop.has-bottom { --bottom: 294px; }
 .surface-desktop > .topbar { grid-area: topbar; }
 .surface-zone { display: flex; flex-direction: column; min-height: 0; min-width: 0; overflow: hidden; }
 .zone-center { grid-area: center; } .zone-left { grid-area: left; border-right: 1px solid var(--line); } .zone-right { grid-area: right; border-left: 1px solid var(--line); }
@@ -41,11 +41,73 @@ body { display: flex; flex-direction: column; height: 100dvh; }
 #landingMethod { color: var(--ink-2); }
 .landing-compare { white-space: normal; min-width: 210px; font-size: 12px; color: var(--ink-2); }
 .surface-embedded .app { height: 100dvh; } .surface-embedded .heroinfo b { font-size: 16px; } .surface-embedded .ctx { padding: 10px 12px; }
-@media (max-width: 1200px) { .surface-desktop.has-left { --left: 210px; } .surface-desktop.has-right { --right: 310px; } }
+/* ---- layout proportions (functional audit, checkpoint 2) ----
+   Side columns scale with the window between fixed limits, so the 3D view
+   keeps most of the width. The time controls in the dock line up with the
+   left column. */
+.surface-desktop.has-left { --left: clamp(260px, 18vw, 312px); }
+.surface-desktop.has-right { --right: clamp(280px, 20vw, 304px); }
+.surface-desktop.has-left > .zone-bottom > .dock { grid-template-columns: var(--left) minmax(0, 1fr); }
+
+/* landing sites: full names and details, two lines at most */
+.sidebar > h2 { padding: 12px 14px 4px; }
+#sites { padding: 0 8px 8px; }
+.site { padding: 6px 9px; gap: 1px; }
+.site span { white-space: normal; overflow: visible; line-height: 1.3; }
+.site small { white-space: normal; overflow: hidden; display: -webkit-box; -webkit-line-clamp: 2; -webkit-box-orient: vertical; line-height: 1.35; }
+form.custom { padding: 9px 14px 10px; gap: 6px; }
+form.custom .pair { grid-template-columns: 1fr 1fr auto; align-items: end; gap: 6px; }
+form.custom .pair input { min-width: 0; }
+form.custom .pair .btn { padding: 0 12px; }
+
+/* rover: one compact block */
+#roverCard { gap: 6px; padding: 10px 14px; }
+#roverCard .rvhead { display: flex; align-items: baseline; gap: 8px; min-width: 0; }
+#roverCard .rvhead h2 { flex: none; }
+#roverCard .rvhead .where { min-width: 0; font-size: 12.5px; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+#roverCard .chips { flex-direction: row; flex-wrap: wrap; gap: 2px 12px; }
+#roverCard .chip { font-size: 12px; }
+#roverCard .drive { gap: 10px; align-items: center; }
+#roverCard .dpad { grid-template-columns: repeat(3, 28px); grid-template-rows: repeat(2, 24px); gap: 2px; }
+#roverCard .dpad button { height: 24px; }
+#roverCard .rvbtns { gap: 4px; }
+#roverCard .rvbtns button:not(.linkbtn) { height: 24px; padding: 0 8px; font-size: 12px; }
+#roverCard .rvbtns .linkbtn { font-size: 12px; }
+#roverCard .hint { font-size: 11.5px; line-height: 1.35; }
+.integration-context { padding: 9px 14px; gap: 4px; }
+
+/* inspector tabs share the column width instead of overflowing it */
+.insptabs > .tabs { gap: 0; padding: 0 4px; }
+.insptabs > .tabs button { flex: 1 1 auto; min-width: 0; padding: 0 4px; }
+
+/* map tab: the map comes first and grows with the window */
+.maphead { display: flex; align-items: center; justify-content: space-between; gap: 8px; flex-wrap: wrap; }
+.maphead .linkbtn { font-size: 12px; }
+.zone-center .maphead .linkbtn { display: none; }
+.zone-right #globeWrap.plate, .zone-left #globeWrap.plate { flex: none; height: clamp(260px, 44vh, 440px); min-height: 260px; }
+#globeWrap #globe { height: 100%; }
+/* maps are fixed-size flex items: never squeeze them to make the panel fit */
+.tabpanel > #map, .zone-center #globeWrap.plate { flex: none; }
+/* the map script sets the canvas height to match its drawing (square pole view, 2:1 flat view);
+   a CSS minimum height would stretch the drawing and shift where clicks land */
+#map { min-height: 0; }
+
+@media (max-width: 1200px) {
+  .surface-desktop.has-left { --left: 232px; }
+  .surface-desktop.has-right { --right: 272px; }
+  .dockmain .tabs button { padding-left: 8px; padding-right: 8px; }
+}
 @media (max-width: 1080px) {
   body { display: block; height: auto; }
   .app.surface-desktop { display: flex; flex-direction: column; height: auto; }
   .surface-zone { overflow: visible; flex-direction: column; border: 0; } .zone-center { order: 0; } .zone-left { order: 1; } .zone-right { order: 2; } .zone-top { order: 3; } .zone-bottom { order: 4; }
   .surface-zone > .viewport { height: 62vh; min-height: 340px; flex: none; } .surface-zone > .dock { display: flex; flex-direction: column; } .surface-zone .transport { width: 100%; }
   .workspace-saved { display: none; } .pages { margin-left: 0; }
+}
+@media (max-width: 1080px) {
+  #sites .site { flex: none; width: 236px; }
+}
+@media (max-width: 480px) {
+  .pages { gap: 0; max-width: 100%; }
+  .pages a { padding: 0 7px; }
 }

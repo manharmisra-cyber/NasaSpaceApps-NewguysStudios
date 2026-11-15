@@ -15,6 +15,7 @@
  document.getElementById('surfaceArrange').onclick=()=>{picker.hidden=!picker.hidden;document.getElementById('surfaceArrange').setAttribute('aria-expanded',!picker.hidden);};
  document.getElementById('surfaceFocus').onclick=()=>{focused=!focused;document.getElementById('surfaceFocus').setAttribute('aria-pressed',focused);apply();};
  document.getElementById('surfaceMapFocus').onclick=()=>{const old=Object.keys(names).find(id=>layout[id]==='center');if(old!=='details'){layout[old]=layout.details==='hidden'?'right':layout.details;layout.details='center';}apply();document.querySelector('[data-tab="moon"]').click();};
+ const mapLarge=document.getElementById('mapLarge');if(mapLarge)mapLarge.onclick=()=>document.getElementById('surfaceMapFocus').click();
  document.getElementById('surfaceLayoutReset').onclick=()=>{layout={...defaults};focused=false;document.getElementById('surfaceFocus').setAttribute('aria-pressed','false');apply();};
  document.addEventListener('keydown',e=>{if(e.key==='Escape'&&focused){focused=false;document.getElementById('surfaceFocus').setAttribute('aria-pressed','false');apply();}});
  apply();

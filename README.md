@@ -42,8 +42,13 @@ The pages share one site list and hand the selected place and time to each other
 
 ### Mission designer
 - Rotate a 3D Moon built from NASA elevation, drop a pin or pick a preset, and choose a search radius.
-- Start in lunar orbit or estimate an Earth parking-orbit departure; land, change orbit, or check a Moon-stationary orbit.
-- Enter wet and dry mass, thrust, specific impulse, fuel reserve and orbit; get delta-v budgets, thrust-to-weight checks, candidate arrival tracks and a burn schedule (CSV or JSON).
+- Start in lunar orbit or estimate an Earth parking-orbit departure; land on the Moon or move to another lunar orbit, optionally with an inclination change.
+- Enter wet and dry mass, thrust, specific impulse, fuel reserve and orbit; get delta-v budgets, candidate arrival tracks and a burn schedule (CSV or JSON).
+- **Arrival search for your pin** covers the whole chosen interval (up to 731 days) and finds every pass, including passes shorter than a second, with window edges to 0.0001 s.
+- **Crewed missions** check the acceleration the crew feels (thrust divided by mass) against NASA's sustained +Gz limits for Artemis landers (NASA/TM-20205008196), for standing or seated crews with or without a compression garment.
+- **Mission check** lists every check as pass, warning, fail, not checked or not applicable, with the value, the limit and a suggested correction. Items the model does not compute, such as the powered descent profile, are never shown as passes.
+- **Step-by-step guidance** for each maneuver: trans-lunar injection, lunar orbit insertion, deorbit, terminal braking, Hohmann transfers, circularization, apoapsis and periapsis changes and inclination changes, with burn point, direction, delta-v, duration, propellant, expected result and warnings.
+- **Burn planning** stops at usable propellant: a burn that would dip into the reserve is marked infeasible with its shortfall, and later burns are marked not reached.
 - Play arrival areas forward in time.
 - Regional terrain viewer: 100 to 1,000 km areas with imagery, elevation colours or wireframe, at true scale or exaggerated.
 
@@ -92,7 +97,7 @@ node tests/run.js
 node --test tests/*.mjs
 ```
 
-They cover the astronomy (Meeus worked examples, the Apollo 11 landing Sun elevation, and JPL Horizons comparisons: largest difference 0.034 degrees across three sites and five dates, and 0.036 degrees across 4,326 cached hourly directions), the terrain, horizon, shadow and line-of-sight code, vehicle placement on terrain, the orbit and burn calculations, time playback, data integrity and the hand-off between pages.
+They cover the arrival search (including a brute-force one-second cross-check), crew acceleration limits, maneuver guidance, the mission check, burn planning and agreement between them, as well as the astronomy (Meeus worked examples, the Apollo 11 landing Sun elevation, and JPL Horizons comparisons: largest difference 0.034 degrees across three sites and five dates, and 0.036 degrees across 4,326 cached hourly directions), the terrain, horizon, shadow and line-of-sight code, vehicle placement on terrain, the orbit and burn calculations, time playback, data integrity and the hand-off between pages.
 
 ## Data and sources
 
@@ -108,7 +113,10 @@ Check each source page for its credit line before publishing. NASA does not endo
 
 - Terrain is 500 m at preset sites and 1.9 km elsewhere. Smaller features are missing, so near the south pole the real Sun can be blocked earlier than shown. A higher-resolution `.asc` tile can be loaded per site.
 - Sun and Earth positions use an approximate theory. They agree with JPL Horizons to within 0.04 degrees on the dates tested; that is not a guarantee for other dates.
-- The mission designer is a preliminary two-body model on a reference sphere. Earth encounter phasing, finite powered descent, terrain-safe landing and slope or hazard checks are not solved. A pass on the fuel and geometry screen does not prove a landing is possible.
+- The arrival search for a pin covers the whole chosen interval, up to 731 days per run. It assumes the modelled descent (an impulsive burn, half a transfer ellipse, the Moon as a smooth sphere of radius 1,737.4 km) and finds window edges to 0.0001 s; see `arrival-search.mjs` for the method and tolerances.
+- The mission designer is a preliminary two-body model on a reference sphere. Burns are impulses; durations are constant-thrust estimates. Earth encounter phasing, the lunar arrival plane, finite powered descent, terrain-safe landing and slope or hazard checks are not solved. A pass on the fuel and geometry screen does not prove a landing is possible.
+- Orbit transfers assume the target orbit shares the start orbit's apse line; inclination changes are a separate burn at the cheaper node, not combined with the transfer.
+- Crew acceleration uses only NASA's +Gz limits and treats all burn time as one cumulative exposure; transient loads, life support and abort options are not assessed.
 - The Earth-to-Moon flight in the space view is illustrative and ignores the Moon's gravity.
 - The resource calculator shows ideal energy and Earth-visibility capacity. It is not a power, thermal or radio link budget.
 - Small craters, rocks and surface texture in the 3D surface view are decoration.

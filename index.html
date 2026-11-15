@@ -25,8 +25,8 @@
       <div class="pair">
         <label for="clat">Latitude &deg;N <input type="number" id="clat" step="any" min="-90" max="90"></label>
         <label for="clon">Longitude &deg;E <input type="number" id="clon" step="any" min="-180" max="360"></label>
+        <button class="btn" type="submit" aria-label="Go to these coordinates">Go</button>
       </div>
-      <button class="btn" type="submit">Go to these coordinates</button>
       <div id="cerr" role="alert"></div>
     </form>
   </nav>
@@ -107,8 +107,7 @@
 
   <aside class="inspector" aria-label="Details"><div class="integration-context"><a id="planMission" data-mission-link href="mission.html">Plan a mission here ↗</a><div id="dataNotice" role="status"></div></div>
     <section class="ctx" id="roverCard" aria-label="Rover">
-      <h2>Rover</h2>
-      <div class="where" id="rvWhere"></div>
+      <div class="rvhead"><h2>Rover</h2><div class="where" id="rvWhere"></div></div>
       <div class="chips" id="rvChips" aria-live="polite"></div>
       <div class="drive">
         <div class="dpad" id="dpad" role="group" aria-label="Drive the rover">
@@ -116,7 +115,7 @@
         </div>
         <div class="rvbtns"><button id="rvSpeed" data-v="1" aria-pressed="false">Speed: normal</button><button id="ledBtn" aria-pressed="false">LED lamps: off</button><button class="linkbtn" id="rvReset">Return to lander</button></div>
       </div>
-      <p class="hint">Click the 3D view first. Arrow keys drive, U changes speed, L switches the lamps, the mouse wheel zooms.</p>
+      <p class="hint" title="Click the 3D view first so it receives the keys. The mouse wheel zooms.">Click the 3D view, then: arrows drive, U speed, L lamps.</p>
       <div class="rnote" id="rvNote" role="status"></div>
     </section>
     <section class="ctx" id="flightCard" aria-label="Flight to the Moon" hidden>
@@ -153,13 +152,15 @@
         <p class="note">The mission starts at the selected time with a full battery and runs for the mission length chosen in the Timeline tab. The lander works while it is sunlit and drops to its dark-time power draw otherwise. Data is counted whenever Earth is in view, which assumes a ground station is always listening. The starting values are examples, not a real spacecraft. Hourly midpoint sampling, lossless battery, no charge/discharge limits or degradation; no radio link budget or station scheduling. These estimates do not certify mission feasibility.</p>
       </div>
       <div class="tabpanel" data-panel="moon" hidden>
-        <h2>Candidate arrival areas</h2><p id="candidateSummary" class="note" role="status">Loading mission scenario…</p><div class="candidate-tools"><label>Arrival interval<select id="candidateHours"><option value="1">Next hour</option><option value="24" selected>Next 24 hours</option><option value="168">Next 7 days</option></select></label><label><input id="candidateOnly" type="checkbox"> Within pin radius only</label><button id="nearestCandidate">Use nearest arrival</button></div><div class="seg" id="viewSeg" role="group" aria-label="Map view"><button data-v="globe" aria-pressed="true">Globe</button><button data-v="pole" aria-pressed="false">South pole</button><button data-v="flat" aria-pressed="false">Flat map</button></div>
+        <div class="maphead"><div class="seg" id="viewSeg" role="group" aria-label="Map view"><button data-v="globe" aria-pressed="true">Globe</button><button data-v="pole" aria-pressed="false">South pole</button><button data-v="flat" aria-pressed="false">Flat map</button></div><button type="button" class="linkbtn" id="mapLarge">Show large map</button></div>
         <div class="plate" id="globeWrap">
           <canvas id="globe" role="img" aria-label="3D globe of the Moon showing day and night, the limit of Earth visibility and landing sites"></canvas>
           <span class="lab3 sun" id="gSun" hidden>to Sun</span><span class="lab3 earth" id="gEarth" hidden>to Earth</span><span class="lab3 ld" id="gSite" hidden></span>
         </div>
         <canvas id="map" hidden role="img" aria-label="Map of the Moon showing day and night, the limit of Earth visibility, and landing sites"></canvas>
-        <p class="note" id="mapNote"></p><div class="map-legend"><span class="good">● Candidate</span><span class="warn">● Conditional Earth route</span><span class="bad">● Failed fuel/thrust</span><span>◯ Pin radius</span></div><p class="note">Tracks use the Mission designer’s spacecraft and orbit. Highlighted samples are preliminary arrivals, not terrain-safe landing zones. South pole view covers 60–90° S; use Flat map for other tracks.</p>
+        <p class="note" id="mapNote"></p>
+        <h2>Candidate arrival areas</h2><p id="candidateSummary" class="note" role="status">Loading mission scenario…</p><div class="candidate-tools"><label>Arrival interval<select id="candidateHours"><option value="1">Next hour</option><option value="24" selected>Next 24 hours</option><option value="168">Next 7 days</option></select></label><label><input id="candidateOnly" type="checkbox"> Within pin radius only</label><button id="nearestCandidate">Use nearest arrival</button></div>
+        <div class="map-legend"><span class="good">● Candidate</span><span class="warn">● Conditional Earth route</span><span class="bad">● Failed fuel, thrust or crew limit</span><span>◯ Pin radius</span></div><p class="note">Tracks use the Mission designer’s spacecraft and orbit. Highlighted samples are preliminary arrivals, not terrain-safe landing zones. South pole view covers 60–90° S; use Flat map for other tracks.</p>
       </div>
       <div class="tabpanel" data-panel="setup" hidden>
         <div class="field"><label for="terrainSel">Terrain around the site</label>
